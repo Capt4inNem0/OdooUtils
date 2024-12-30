@@ -30,3 +30,5 @@
 *.exe
 *.out
 *.app
+odoo_module_finder
+
