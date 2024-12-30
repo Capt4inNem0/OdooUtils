@@ -17,16 +17,21 @@ bool is_odoo_module(const fs::path &path) {
 
 
 int main(int argc, char *argv[]) {
-    fs::path p = "./";
+    fs::path p = fs::canonical("./");
     if (argc > 1) {
-        p = argv[1];
+        std::string arg_path = argv[1];
+        if (fs::exists(arg_path) && fs::is_directory(arg_path)) {
+            p = fs::canonical(arg_path);
+        } else {
+            std::cout << "Invalid path" << std::endl;
+            return 1;
+        }
     }
     
     std::list<std::string> odoo_modules;
     std::stack<fs::path> stack;
     stack.push(p);
     if (fs::exists(p) && fs::is_directory(p)) {
-        p = fs::canonical(p);
         while (!stack.empty()) {
             fs::path current = stack.top();
             stack.pop();
