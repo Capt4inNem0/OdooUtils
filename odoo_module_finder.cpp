@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <filesystem>
-#include <list>
+#include <set>
 #include <stack>
 #include <string>
 #include <boost/algorithm/string/join.hpp>
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
         }
     }
     
-    std::list<std::string> odoo_modules;
+    std::set<std::string> odoo_modules;
     std::stack<fs::path> stack;
     stack.push(p);
     if (fs::exists(p) && fs::is_directory(p)) {
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
             fs::path current = stack.top();
             stack.pop();
             if (is_odoo_module(current)) {
-                odoo_modules.push_back(current);
+                odoo_modules.insert(current.parent_path());
             } else {
                 for (const auto &entry : fs::directory_iterator(current)) {
                     if (fs::is_directory(entry.path())) {
